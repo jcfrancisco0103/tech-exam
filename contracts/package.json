@@ -1,0 +1,21 @@
+{
+  "name": "contracts",
+  "private": true,
+  "version": "0.0.1",
+  "type": "commonjs",
+  "scripts": {
+    "dev": "hardhat node",
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy:sepolia": "hardhat run --network sepolia scripts/deploy.ts"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "@openzeppelin/contracts": "^5.0.2"
+  },
+  "devDependencies": {
+    "hardhat": "^2.22.8",
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "typescript": "5.3.3"
+  }
+}

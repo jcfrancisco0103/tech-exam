@@ -1,0 +1,24 @@
+version: "3.9"
+services:
+  backend:
+    build:
+      context: ../
+      dockerfile: docker/backend.Dockerfile
+    environment:
+      - PORT=3001
+      - RPC_URL_MAINNET=${RPC_URL_MAINNET}
+      - RPC_URL_SEPOLIA=${RPC_URL_SEPOLIA}
+    ports:
+      - "3001:3001"
+  frontend:
+    build:
+      context: ../
+      dockerfile: docker/frontend.Dockerfile
+    environment:
+      - VITE_ETHERSCAN_API_KEY=${VITE_ETHERSCAN_API_KEY}
+      - VITE_CONTRACT_ADDRESS=${VITE_CONTRACT_ADDRESS}
+      - VITE_CONTRACT_CHAIN_ID=${VITE_CONTRACT_CHAIN_ID}
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend

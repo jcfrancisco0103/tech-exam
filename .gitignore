@@ -1,0 +1,7 @@
+frontend/node_modules/
+**/.env
+**/.env.local
+**/.env.production
+**/.env.development
+dist/
+*.log
