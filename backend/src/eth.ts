@@ -1,22 +1,38 @@
 import { ethers } from 'ethers'
-import { rpcUrlFor, type Network } from './config'
+import { rpcUrlsFor, type Network } from './config'
 
-export function providerFor(network: Network) {
-  return new ethers.JsonRpcProvider(rpcUrlFor(network))
+function providerFromUrl(url: string) {
+  return new ethers.JsonRpcProvider(url)
+}
+
+async function tryWithRpc<T>(network: Network, fn: (provider: ethers.JsonRpcProvider) => Promise<T>) {
+  const urls = rpcUrlsFor(network)
+  let lastErr: unknown
+  for (const url of urls) {
+    try {
+      const provider = providerFromUrl(url)
+      return await fn(provider)
+    } catch (e) {
+      lastErr = e
+    }
+  }
+  throw lastErr
 }
 
 export async function getNetworkInfo(network: Network) {
-  const provider = providerFor(network)
-  const [feeData, blockNumber] = await Promise.all([
-    provider.getFeeData(),
-    provider.getBlockNumber(),
-  ])
-  const gasPrice = feeData.gasPrice ?? feeData.maxFeePerGas ?? 0n
-  return { gasPriceWei: gasPrice.toString(), blockNumber }
+  return tryWithRpc(network, async (provider) => {
+    const [feeData, blockNumber] = await Promise.all([
+      provider.getFeeData(),
+      provider.getBlockNumber(),
+    ])
+    const gasPrice = feeData.gasPrice ?? feeData.maxFeePerGas ?? 0n
+    return { gasPriceWei: gasPrice.toString(), blockNumber }
+  })
 }
 
 export async function getBalanceEth(network: Network, address: string) {
-  const provider = providerFor(network)
-  const bal = await provider.getBalance(address)
-  return ethers.formatEther(bal)
+  return tryWithRpc(network, async (provider) => {
+    const bal = await provider.getBalance(address)
+    return ethers.formatEther(bal)
+  })
 }

@@ -1,11 +1,16 @@
-import Wallet from './components/Wallet'
+import './styles.css'
+import Home from './components/Home'
 
 export default function App() {
   return (
-    <div style={{ maxWidth: 960, margin: '0 auto', padding: 24, fontFamily: 'system-ui, sans-serif' }}>
-      <h1>Ethereum Wallet</h1>
-      <p>Connect your wallet to view balance and recent transactions.</p>
-      <Wallet />
+    <div className="app-root">
+      <header className="app-header">
+        <h1>Ethereum Wallet</h1>
+        <nav className="app-nav">Simple dApp demo</nav>
+      </header>
+      <main className="app-main">
+        <Home />
+      </main>
     </div>
   )
 }
